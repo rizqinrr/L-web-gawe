@@ -10,12 +10,22 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
-        Schema::create('project_applicants', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
-    }
+{
+    Schema::create('project_applicants', function (Blueprint $table) {
+        $table->id();
+        
+        // Perbaiki baris ini
+        $table->foreignId('project_id')->constrained()->onDelete('cascade');
+
+        // Gunakan foreignId() juga untuk freelancer_id untuk konsistensi
+        $table->foreignId('freelancer_id')->constrained('users')->onDelete('cascade');
+        
+        $table->text('message');
+        $table->string('status');
+        $table->softDeletes();
+        $table->timestamps();
+    });
+}
 
     /**
      * Reverse the migrations.
