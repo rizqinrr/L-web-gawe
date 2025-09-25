@@ -31,7 +31,7 @@
                 <option value="project_freelancer">Freelancer</option>
                 <option value="project_client">Client</option>
             </select>
-            
+
         </div>
 
         <!-- Email Address -->
