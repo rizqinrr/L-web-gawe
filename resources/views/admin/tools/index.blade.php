@@ -44,7 +44,7 @@
                         Belum ada data tools.
                     </p>
                 @endforelse
-
+                    {{ $tools->links() }}
             </div>
         </div>
     </div>

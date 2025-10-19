@@ -23,7 +23,7 @@ class StoreTopupWalletRequest extends FormRequest
     {
         return [
             //
-            'proof' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg, webp'],
+            'proof' => ['required', 'image', 'mimes:jpeg,png,jpg'],
             'amount' => ['required', 'integer'],
         ];
     }

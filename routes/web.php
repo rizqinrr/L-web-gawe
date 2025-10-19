@@ -12,7 +12,7 @@ use App\Http\Controllers\ProjectApplicantController;
 use App\Http\Controllers\WalletTransactionController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth/login');
 });
 
 Route::get('/dashboard', function () {
