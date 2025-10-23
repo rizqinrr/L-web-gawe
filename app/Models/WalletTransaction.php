@@ -13,6 +13,7 @@ class WalletTransaction extends Model
         'user_id',
         'amount',
         'type', // credit / debit
+        'proof',
         'is_paid',
         'bank_name',
         'bank_account_name',

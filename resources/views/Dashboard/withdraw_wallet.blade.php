@@ -39,7 +39,7 @@
                 @endif
 
                 <h3 class="text-indigo-950 text-xl font-bold">Withdraw Money</h3>
-                <form method="POST" action="{{route('dashboard.withdraw_wallet.store')}}" enctype="multipart/form-data">
+                <form method="POST" action="{{route('dashboard.wallet.withdraw.store')}}">
                     @csrf
 
                     <div>

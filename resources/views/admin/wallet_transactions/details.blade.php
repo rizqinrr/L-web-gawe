@@ -57,29 +57,29 @@
                     </div>
                 </div>
 
+                @if ($walletTransaction->type == 'Withdraw')
+                    <hr class="my-5">
 
-                <hr class="my-5">
+                    <div>
+                        <h3 class="text-indigo-950 text-xl font-bold mb-5">Send Payment to:</h3>
+                        <div class="flex flex-row gap-x-10">
+                            <div>
+                                <p class="text-slate-500 text-sm">Bank</p>
+                                <h3 class="text-indigo-950 text-xl font-bold">DANA</h3>
+                            </div>
+                            <div>
+                                <p class="text-slate-500 text-sm">No Account</p>
+                                <h3 class="text-indigo-950 text-xl font-bold">081390012456</h3>
+                            </div>
+                            <div>
+                                <p class="text-slate-500 text-sm">Account Name</p>
+                                <h3 class="text-indigo-950 text-xl font-bold">WEBgawe Indonesia</h3>
+                            </div>
+                        </div>
 
-                <div>
-                    <h3 class="text-indigo-950 text-xl font-bold mb-5">Send Payment to:</h3>
-                    <div class="flex flex-row gap-x-10">
-                        <div>
-                            <p class="text-slate-500 text-sm">Bank</p>
-                            <h3 class="text-indigo-950 text-xl font-bold">DANA</h3>
-                        </div>
-                        <div>
-                            <p class="text-slate-500 text-sm">No Account</p>
-                            <h3 class="text-indigo-950 text-xl font-bold">081390012456</h3>
-                        </div>
-                        <div>
-                            <p class="text-slate-500 text-sm">Account Name</p>
-                            <h3 class="text-indigo-950 text-xl font-bold">WEBgawe Indonesia</h3>
-                        </div>
                     </div>
 
-                </div>
 
-                @if ($walletTransaction->type == 'Withdraw')
                     <hr class="my-5">
                     <h3 class="text-indigo-950 text-xl font-bold mb-5">Proof of Payment</h3>
                     <img src=" " alt="" class="rounded-2xl object-cover w-[300px] h-[200px] mb-3">
@@ -107,18 +107,23 @@
                 @endif
 
                 @if ($walletTransaction->type == 'Topup')
-                <hr class="my-5">
-                <h3 class="text-indigo-950 text-xl font-bold mb-5">Proof of Topup Payment</h3>
-                <img src="{{Storage::url($walletTransaction->proof)}}" alt="" class="rounded-2xl object-cover w-[300px] h-[200px] mb-3">
+                    <hr class="my-5">
+                    <h3 class="text-indigo-950 text-xl font-bold mb-5">Proof of Topup Payment</h3>
+                    <img src="{{ Storage::url($walletTransaction->proof) }}" alt="gambar proof"
+                        class="rounded-2xl object-cover w-[300px] h-[200px] mb-3">
+                    {{-- {{ dd($walletTransaction->proof) }} --}}
+                    <hr class="my-5">
 
-                <hr class="my-5">
-                <form action="#" method="POST">
-                    @csrf
-                    @method('PUT')
-                    <button type="submit" class="font-bold py-4 px-6 bg-indigo-700 text-white rounded-full">
-                        Approve Topup
-                    </button>
-                </form>
+                    @if (!$walletTransaction->is_paid)
+                        <form action="{{ route('admin.wallet_transactions.update', $walletTransaction) }}"
+                            method="POST">
+                            @csrf
+                            @method('PUT')
+                            <button type="submit" class="font-bold py-4 px-6 bg-indigo-700 text-white rounded-full">
+                                Approve Topup
+                            </button>
+                        </form>
+                    @endif
                 @endif
             </div>
         </div>

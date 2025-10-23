@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\WalletTransaction;
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\WalletTransaction;
+use Illuminate\Support\Facades\DB;
 
 class WalletTransactionController extends Controller
 {
@@ -15,14 +17,16 @@ class WalletTransactionController extends Controller
         //
     }
 
-    public function wallet_topups() {
+    public function wallet_topups()
+    {
         $topup_transactions = WalletTransaction::where('type', 'Topup')->orderByDesc('id')->paginate(10);
         return view('admin.wallet_transactions.topups', compact('topup_transactions'));
     }
 
-    public function wallet_withdrawals() {
+    public function wallet_withdrawals()
+    {
         $withdrawal_transactions = WalletTransaction::where('type', 'Withdraw')->orderByDesc('id')->paginate(10);
-        return view('admin.wallet_transactions.withdrawals', compact('withdrawal_transactions'));
+        return view('admin.wallet_transactions.withdrawals', compact('withdrawals_transactions'));
     }
 
     /**
@@ -64,6 +68,30 @@ class WalletTransactionController extends Controller
     public function update(Request $request, WalletTransaction $walletTransaction)
     {
         //
+        $user_to_be_approved = User::where('id', $walletTransaction->user_id)->first();
+        DB::transaction(function () use ($walletTransaction, $user_to_be_approved, $request) {
+            if ($walletTransaction->type == 'Withdraw') {
+                // perlu melampirkan bukti pembayaran bahwa kita (super admin) sudah membayar penarikan user
+                if ($request->hasFile('proof')) {
+                    $proofPath = $request->file('proof')->store('proofs', 'public');
+                }
+                $walletTransaction->update([
+                    'proof' => $proofPath,
+                    'is_paid' => true,
+                ]);
+            } elseif ($walletTransaction->type == 'Topup') {
+                $walletTransaction->update([
+                    'is_paid' => true,
+                ]);
+                $user_to_be_approved->wallet->increment('balance', $walletTransaction->amount);
+            }
+        });
+
+        if ($walletTransaction->type === 'Withdraw') {
+            return redirect()->route('admin.withdrawals');
+        } else {
+            return redirect()->route('admin.topups');
+        }
     }
 
     /**

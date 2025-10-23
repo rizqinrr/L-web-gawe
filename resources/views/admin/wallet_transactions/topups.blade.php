@@ -62,7 +62,7 @@
                         </div>
                     </div>
                 @empty
-                    <p class="text-center9 text-slate-500">No topup transactions found.</p>
+                    <p class="text-center9 text-slate-500">Belum ada data transaksi terbaru.</p>
                 @endforelse
             </div>
         </div>
