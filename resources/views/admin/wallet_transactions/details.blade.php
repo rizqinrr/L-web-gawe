@@ -11,7 +11,7 @@
         <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-10 flex flex-col gap-y-5">
                 <h3 class="text-indigo-950 text-xl font-bold mb-5">
-                    Topup
+                    {{ $walletTransaction->type === 'Topup' ? 'Topup Details' : 'Withdrawal Details' }}
                 </h3>
                 <div class="flex flex-row gap-x-5 items-center justify-between">
                     <svg width="100" height="100" viewBox="0 0 24 24" fill="none"
@@ -52,7 +52,7 @@
                             {{ $walletTransaction->created_at->format('M d, Y') }}</h3>
                     </div>
                     <div class="">
-                        <p class="text-slate-500 text-sm">Cliet</p>
+                        <p class="text-slate-500 text-sm">User</p>
                         <h3 class="text-indigo-950 text-xl font-bold">{{ $walletTransaction->user->name }}</h3>
                     </div>
                 </div>
@@ -65,15 +65,17 @@
                         <div class="flex flex-row gap-x-10">
                             <div>
                                 <p class="text-slate-500 text-sm">Bank</p>
-                                <h3 class="text-indigo-950 text-xl font-bold">DANA</h3>
+                                <h3 class="text-indigo-950 text-xl font-bold">{{ $walletTransaction->bank_name }}</h3>
                             </div>
                             <div>
                                 <p class="text-slate-500 text-sm">No Account</p>
-                                <h3 class="text-indigo-950 text-xl font-bold">081390012456</h3>
+                                <h3 class="text-indigo-950 text-xl font-bold">
+                                    {{ $walletTransaction->bank_account_number }}</h3>
                             </div>
                             <div>
                                 <p class="text-slate-500 text-sm">Account Name</p>
-                                <h3 class="text-indigo-950 text-xl font-bold">WEBgawe Indonesia</h3>
+                                <h3 class="text-indigo-950 text-xl font-bold">
+                                    {{ $walletTransaction->bank_account_name }}</h3>
                             </div>
                         </div>
 
@@ -81,29 +83,33 @@
 
 
                     <hr class="my-5">
-                    <h3 class="text-indigo-950 text-xl font-bold mb-5">Proof of Payment</h3>
-                    <img src=" " alt="" class="rounded-2xl object-cover w-[300px] h-[200px] mb-3">
-
+                    @if ($walletTransaction->is_paid)
+                        <h3 class="text-indigo-950 text-xl font-bold mb-5">Proof of Payment</h3>
+                        <img src="{{ Storage::url($walletTransaction->proof)}}" alt="" class="rounded-2xl object-cover w-[300px] h-[200px] mb-3">
+                    @endif
                     <hr class="my-5">
 
-                    <h3 class="text-indigo-950 text-xl font-bold">Confirm Withdrawal</h3>
-                    <form method="POST" action="#" enctype="multipart/form-data">
-                        @csrf
-                        @method('PUT')
-                        <div class="mt-4">
-                            <x-input-label for="proof" :value="__('proof')" />
-                            <x-text-input id="proof" class="block mt-1 w-full" type="file" name="proof"
-                                required autofocus autocomplete="proof" />
-                            <x-input-error :messages="$errors->get('proof')" class="mt-2" />
-                        </div>
+                    @if (!$walletTransaction->is_paid)
+                        <h3 class="text-indigo-950 text-xl font-bold">Confirm Withdrawal</h3>
+                        <form method="POST" action="{{route('admin.wallet_transactions.update', $walletTransaction)}}" enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
+                            <div class="mt-4">
+                                <x-input-label for="proof" :value="__('proof')" />
+                                <x-text-input id="proof" class="block mt-1 w-full" type="file" name="proof"
+                                    required autofocus autocomplete="proof" />
+                                <x-input-error :messages="$errors->get('proof')" class="mt-2" />
+                            </div>
 
-                        <div class="flex items-center justify-end mt-4">
+                            <div class="flex items-center justify-end mt-4">
 
-                            <button type="submit" class="font-bold py-4 px-6 bg-indigo-700 text-white rounded-full">
-                                Update Withdrawal
-                            </button>
-                        </div>
-                    </form>
+                                <button type="submit"
+                                    class="font-bold py-4 px-6 bg-indigo-700 text-white rounded-full">
+                                    Update Withdrawal
+                                </button>
+                            </div>
+                        </form>
+                    @endif
                 @endif
 
                 @if ($walletTransaction->type == 'Topup')

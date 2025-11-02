@@ -34,7 +34,7 @@ class Project extends Model
     }
     public function tools()
     {
-        return $this->belongsToMany(Tool::class, 'project_tools', 'project_id', 'tool_id')->wherePivotNotNull('deleted_at')->withPivot('id');
+        return $this->belongsToMany(Tool::class, 'project_tools', 'project_id', 'tool_id')->wherePivotNull('deleted_at')->withPivot('id');
         // menampilkan semua tool yang dipakai pada project ini
         // bisa juga menghapus tool pada project ini (pada pivot table project_tools ada kolom deleted_at)
     }

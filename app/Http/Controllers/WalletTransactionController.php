@@ -26,7 +26,7 @@ class WalletTransactionController extends Controller
     public function wallet_withdrawals()
     {
         $withdrawal_transactions = WalletTransaction::where('type', 'Withdraw')->orderByDesc('id')->paginate(10);
-        return view('admin.wallet_transactions.withdrawals', compact('withdrawals_transactions'));
+        return view('admin.wallet_transactions.withdrawals', compact('withdrawal_transactions'));
     }
 
     /**

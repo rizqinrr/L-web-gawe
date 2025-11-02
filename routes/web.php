@@ -58,7 +58,7 @@ Route::middleware('auth')->group(function () {
 
             Route::post('/project/{projectApplicant}/completed', [ProjectController::class, 'complete_project_store'])->name('complete_project.store');
             Route::get('/project/{project}/tools', [ProjectController::class, 'tools'])->name('project.tools');
-            Route::post('/project/{project}/tools/store', [ProjectController::class, ' tools_store'])->name('project.tools.store');
+            Route::post('/project/{project}/tools/store', [ProjectController::class, 'tools_store'])->name('project.tools.store');
 
             Route::resource('project_tools', ProjectToolController::class);
         });
